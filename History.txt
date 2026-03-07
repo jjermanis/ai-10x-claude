@@ -1,0 +1,10 @@
+version 00.01	2 minutes dev	2 minutes code gen	1 minutes test		5 minutes total
+
+The application, 10X, already exists in Chat. For variety, I'll try the same in Claude. To start,
+I will take the existing game description, and provide it to Claude. It took significant time to 
+build... but it did work and is playable. No major bugw... but minor bugs exist.
+Step 1 in migrating this game is to fix issues that break rules defined directly in the description.
+It will try again with things it was told the first time. After that, I will go to address issues
+that were not specifically called out the description... but Chat implemented correctly.
+
+

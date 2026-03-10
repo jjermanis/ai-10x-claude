@@ -19,17 +19,6 @@
     color: #e0e0ff;
   }
 
-  h1.game-title {
-    font-family: 'Orbitron', sans-serif;
-    font-weight: 900;
-    font-size: 2rem;
-    letter-spacing: 0.4em;
-    color: #00ffe7;
-    text-shadow: 0 0 20px #00ffe7, 0 0 40px #00ffe780;
-    margin-bottom: 16px;
-    text-transform: uppercase;
-  }
-
   #game-screen {
     width: 800px;
     height: 400px;
@@ -262,8 +251,6 @@
 </head>
 <body>
 
-<h1 class="game-title">10X</h1>
-
 <div id="game-screen">
   <!-- Top center: "10" + exponent -->
   <div id="base-display">
@@ -365,8 +352,8 @@ function startRound(fresh) {
   updateDebug();
 
   if (fresh) {
-    // render exponent fresh (no animation on game start)
-    renderExponentFresh(exponent);
+    // exponent 1 is never displayed — clear the wrapper
+    $('exponent-wrapper').innerHTML = '';
   }
 }
 
@@ -406,6 +393,7 @@ function animateExponentChange(newExp, callback) {
   const existing = wrapper.querySelector('.exp-digit');
 
   // Outgoing: slide to the right and off (translate from 0 → 120px in 1s)
+  const outgoingDelay = existing ? 1000 : 0;
   if (existing) {
     existing.style.transition = 'transform 1s linear, opacity 1s linear';
     existing.style.transform = 'translateX(120px)';
@@ -421,7 +409,7 @@ function animateExponentChange(newExp, callback) {
   incoming.style.opacity = '0';
   wrapper.appendChild(incoming);
 
-  // After outgoing is gone (1s), remove it and start incoming
+  // After outgoing is gone, remove it and start incoming
   setTimeout(() => {
     if (existing && existing.parentNode) existing.remove();
     incoming.style.transition = 'transform 1s linear, opacity 0.4s linear';
@@ -430,7 +418,7 @@ function animateExponentChange(newExp, callback) {
     setTimeout(() => {
       if (callback) callback();
     }, 1000);
-  }, 1000);
+  }, outgoingDelay);
 }
 
 // ── Travelling guess animation ──

@@ -8,3 +8,18 @@ It will try again with things it was told the first time. After that, I will go 
 that were not specifically called out the description... but Chat implemented correctly.
 
 
+version 00.02	4 minutes dev	1 minutes code gen	2 minutes test		12 minutes total
+
+I have worked on several apps using AI. This is the first that feels like a standard project. I
+will go through the game description and see what rules are not followed. Making sure that the
+description is followed is where I will start.
+For the first issue, the first level shows the 1 exponent. That is explicitly ruled out. I
+showed the text to Claude:
+"A game starts with an exponent of 1. That exponent is not displayed."
+Notified Claude and tried again. It worked first time, no issues.
+The next issue... strictly speaking, it doesn't break a rule. But Claude implemented something 
+I didn't ask for.  The title 10X appears at the top of the screen. It's redundant: there's a 
+large 10 at the top of the game. Asked Claude to remove. Literally, it just removed that UI.
+Another easy change.
+
+

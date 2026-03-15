@@ -69,7 +69,6 @@
     position: relative;
     width: 48px;
     height: 48px;
-    overflow: hidden; /* clip incoming/outgoing exponents */
   }
 
   .exp-digit {
@@ -396,7 +395,10 @@ function animateExponentChange(newExp, callback) {
   const outgoingDelay = existing ? 1000 : 0;
   if (existing) {
     existing.style.transition = 'transform 1s linear, opacity 1s linear';
-    existing.style.transform = 'translateX(120px)';
+    const expRect = existing.getBoundingClientRect();
+    const screenRect = document.getElementById('game-screen').getBoundingClientRect();
+    const distToExit = screenRect.right - expRect.left + 10;
+    existing.style.transform = `translateX(${distToExit}px)`;
     existing.style.opacity = '0';
   }
 
@@ -405,7 +407,10 @@ function animateExponentChange(newExp, callback) {
   incoming.className = 'exp-digit';
   incoming.textContent = newExp;
   incoming.style.left = '4px';
-  incoming.style.transform = 'translateX(120px)';
+  const wrapperRect = document.getElementById('exponent-wrapper').getBoundingClientRect();
+  const screenRect2 = document.getElementById('game-screen').getBoundingClientRect();
+  const distFromRight = screenRect2.right - wrapperRect.left + 10;
+  incoming.style.transform = `translateX(${distFromRight}px)`;
   incoming.style.opacity = '0';
   wrapper.appendChild(incoming);
 

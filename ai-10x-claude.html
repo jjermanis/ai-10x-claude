@@ -141,9 +141,9 @@
 
   #win-message {
     position: absolute;
-    top: 50%;
+    top: 58%;
     left: 50%;
-    transform: translate(-50%, -50%);
+    transform: translateX(-50%);
     font-family: 'Orbitron', sans-serif;
     font-size: 40px;
     font-weight: 900;
@@ -288,7 +288,7 @@
 
 <script>
 // ─────────────────────────────────────────────
-const DEBUG = true;
+const DEBUG = false;
 // ─────────────────────────────────────────────
 
 const $ = id => document.getElementById(id);
@@ -343,9 +343,8 @@ function startRound(fresh) {
   $('game-over-msg').style.display = 'none';
   $('new-game-btn').style.display = 'none';
   $('invalid-msg').textContent = '';
-  $('guess-input').value = '';
   $('guess-input').disabled = false;
-  $('guess-input').focus();
+  resetInputWithPrefix();
 
   updateGuessCount();
   updateDebug();
@@ -484,6 +483,26 @@ function animateTravelling(guessValue, direction, callback) {
   }, duration + 50);
 }
 
+// ── Matching prefix helpers ──
+function getMatchingPrefix() {
+  const lo = String(Math.floor(lowBound));
+  const hi = String(Math.floor(highBound));
+  if (lo.length !== hi.length) return '';
+  let prefix = '';
+  for (let i = 0; i < lo.length; i++) {
+    if (lo[i] === hi[i]) prefix += lo[i];
+    else break;
+  }
+  return prefix;
+}
+
+function resetInputWithPrefix() {
+  const prefix = getMatchingPrefix();
+  $('guess-input').value = prefix;
+  $('center-guess').textContent = prefix ? fmt(parseInt(prefix, 10)) : '';
+  $('guess-input').focus();
+}
+
 // ── Guess handling ──
 function submitGuess() {
   if (!gameActive || animating) return;
@@ -532,6 +551,7 @@ function submitGuess() {
         animating = false;
         $('guess-input').disabled = !gameActive;
         checkGameOver();
+        if (gameActive) resetInputWithPrefix();
       });
     } else {
       // too low → travel left
@@ -544,6 +564,7 @@ function submitGuess() {
         animating = false;
         $('guess-input').disabled = !gameActive;
         checkGameOver();
+        if (gameActive) resetInputWithPrefix();
       });
     }
   }

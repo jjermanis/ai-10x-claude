@@ -40,3 +40,33 @@ This looks like all the game description defects have been resolved. Next will b
 are seen.
 
 
+version 00.04	8 minutes dev	1 minutes code gen	3 minutes test		31 minutes total
+
+Now looking for defects that are not specifically called out by the game description. When the
+player guesses correctly, it show You Found It!... right over the number that was guessed. It
+should show a bit below that. I asked Claude to address this; I tweaked the game description to
+avoid this. This was an easy change: two lines in two locations in the CSS.
+There was an optimization that the Chat version had that was not defined here. If the left and
+right limits have the same number of digits, the guess is pre-entered as ling as digits match
+from left-to-right. Again, I sent the change to Claude, and I updated the game description.
+This also worked.
+
+
+
+TODO The font for "You have X guesses..." is a bit small. Increase it.
+TODO Create README.md prior to release.
+Note: This game will be able to play up to 15 digits. This is probably fine: having 10 or 
+	12 to end the game works. Maybe 9? It's here for reference.
+Note: The calculation for guaranteed moves to allow win is accurate, but can run rough.
+	A moderate sub-optimal guess or two can make it possible to lose. Maybe tweak
+	to add one more move? Still challenging, but a hair forgiving.
+From Chat: A win counter / highest exponent reached
+From Chat: Animations when you level up
+From Chat: Add animations or sound
+From Chat: A “perfect round” indicator
+From Chat: Stack guesses visually (like history)
+From Chat: add digit-grouping animation (arcade-style)
+From Chat: add a fade overlay
+From Chat: freeze the guess sprite
+
+

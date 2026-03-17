@@ -52,8 +52,19 @@ from left-to-right. Again, I sent the change to Claude, and I updated the game d
 This also worked.
 
 
+Version 00.05	3 minutes dev	0 minutes code gen	0 minutes test		34 minutes total
 
-TODO The font for "You have X guesses..." is a bit small. Increase it.
+One more thing to change. Some of the text was a bit difficult to read, a little too small. For
+"You have 4 guesses remaining" it was too small, as well as "Enter Your Guess". I asked Claude to 
+make them 30% and 20% larger, respectively. Since they were in font, I asked Claude to pick best-fit
+standard integer sizes for each. "You have..." went from 15 to 20 points. "Enter..." went from 13 
+to 16. Change was trivial - adjustments to each in one location.
+This is a release build.
+
+Version 00.05 is Release Version 00
+
+
+
 TODO Create README.md prior to release.
 Note: This game will be able to play up to 15 digits. This is probably fine: having 10 or 
 	12 to end the game works. Maybe 9? It's here for reference.

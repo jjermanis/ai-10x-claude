@@ -61,13 +61,29 @@ standard integer sizes for each. "You have..." went from 15 to 20 points. "Enter
 to 16. Change was trivial - adjustments to each in one location.
 This is a release build.
 
-Version 00.05 is Release Version 00
+
+Version 00.06	8 minutes dev	1 minute code gen	2 minutes test		45 minutes total
+
+I thought there would be one more change: celebration when you defeat 10^9 (aka a billion). I
+entered the following change to Claude:
+I want there to be victory when the player has correctly found the number when the exponent is 9. 
+There will be no next level. The bottom-center within the screen (the same location that tells you 
+when you have lost) will read: You Win! There will be a fireworks show on the screen. There will 
+be the New Game button in the lower-right corner, the same button that is shown when the player 
+loses. Clicking that button starts a brand new game.
+The initial version was near perfect. Instead of showing, You Win! it went for the standard 
+You Found It! Change that changed. Easy change, for something fairly substantial. The winning
+fireworks that were requested look nice!
+
+Version 00.06 is Release Version 00
 
 
 
+TODO Add an emoji for the web page icon. Can the number 10 be done?
 TODO Create README.md prior to release.
-Note: This game will be able to play up to 15 digits. This is probably fine: having 10 or 
-	12 to end the game works. Maybe 9? It's here for reference.
+TODO Minor bug fix. You can type in a massive number. Like over 30 digits, it doesn't
+	stop. It doesn't accept it... but put a limit on what is typed before Enter.
+Note: This game will be able to play up to 15 digits. 
 Note: The calculation for guaranteed moves to allow win is accurate, but can run rough.
 	A moderate sub-optimal guess or two can make it possible to lose. Maybe tweak
 	to add one more move? Still challenging, but a hair forgiving.

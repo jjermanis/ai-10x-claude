@@ -167,6 +167,31 @@
     display: none;
   }
 
+  /* ── Victory screen ── */
+  #victory-msg {
+    position: absolute;
+    bottom: 40px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-family: 'Orbitron', sans-serif;
+    font-size: 28px;
+    font-weight: 900;
+    color: gold;
+    text-shadow: 0 0 20px gold, 0 0 40px #ff0;
+    white-space: nowrap;
+    text-align: center;
+    display: none;
+    z-index: 55;
+  }
+
+  #fireworks-canvas {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: 40;
+    display: none;
+  }
+
   #new-game-btn {
     position: absolute;
     bottom: 16px;
@@ -272,6 +297,12 @@
   <!-- Win message -->
   <div id="win-message">You Found It!</div>
 
+  <!-- Fireworks -->
+  <canvas id="fireworks-canvas"></canvas>
+
+  <!-- Victory -->
+  <div id="victory-msg">You Win!</div>
+
   <!-- Game over -->
   <div id="game-over-msg"></div>
   <button id="new-game-btn">New Game</button>
@@ -323,6 +354,8 @@ function randomInt(min, max) {
 
 // ── Init / New Game ──
 function initGame() {
+  stopFireworks();
+  $('victory-msg').style.display = 'none';
   exponent = 1;
   startRound(true);
 }
@@ -390,7 +423,6 @@ function animateExponentChange(newExp, callback) {
   const wrapper = $('exponent-wrapper');
   const existing = wrapper.querySelector('.exp-digit');
 
-  // Outgoing: slide to the right and off (translate from 0 → 120px in 1s)
   const outgoingDelay = existing ? 1000 : 0;
   if (existing) {
     existing.style.transition = 'transform 1s linear, opacity 1s linear';
@@ -399,6 +431,15 @@ function animateExponentChange(newExp, callback) {
     const distToExit = screenRect.right - expRect.left + 10;
     existing.style.transform = `translateX(${distToExit}px)`;
     existing.style.opacity = '0';
+  }
+
+  // If newExp is null (victory), just wait for outgoing then callback
+  if (newExp === null) {
+    setTimeout(() => {
+      if (existing && existing.parentNode) existing.remove();
+      if (callback) callback();
+    }, outgoingDelay);
+    return;
   }
 
   // Incoming: start off to the right, slide in
@@ -584,10 +625,113 @@ function checkGameOver() {
   }
 }
 
+// ── Fireworks ──
+let fireworksAnimId = null;
+
+function showVictory() {
+  gameActive = false;
+  $('guess-input').disabled = true;
+  $('guess-count-display').textContent = '';
+  $('center-guess').textContent = '';
+  $('victory-msg').style.display = 'block';
+  $('new-game-btn').style.display = 'block';
+  startFireworks();
+}
+
+function startFireworks() {
+  const canvas = $('fireworks-canvas');
+  canvas.style.display = 'block';
+  canvas.width = 800;
+  canvas.height = 400;
+  const ctx = canvas.getContext('2d');
+  const particles = [];
+
+  const COLORS = [
+    '#ff4466', '#00ffe7', '#ffd700', '#ff8c00',
+    '#c77dff', '#ffffff', '#00ff88', '#ff6bff'
+  ];
+
+  function spawnBurst() {
+    const x = 80 + Math.random() * 640;
+    const y = 40 + Math.random() * 260;
+    const color = COLORS[Math.floor(Math.random() * COLORS.length)];
+    const count = 48 + Math.floor(Math.random() * 24);
+    for (let i = 0; i < count; i++) {
+      const angle = (Math.PI * 2 * i) / count + (Math.random() - 0.5) * 0.3;
+      const speed = 1.5 + Math.random() * 3.5;
+      particles.push({
+        x, y,
+        vx: Math.cos(angle) * speed,
+        vy: Math.sin(angle) * speed,
+        alpha: 1,
+        color,
+        radius: 1.5 + Math.random() * 1.5,
+        decay: 0.013 + Math.random() * 0.009,
+        gravity: 0.06
+      });
+    }
+  }
+
+  // Spawn bursts on a staggered schedule
+  const burstTimes = [];
+  for (let i = 0; i < 18; i++) {
+    burstTimes.push(i * 400 + Math.random() * 200);
+  }
+  const startTime = performance.now();
+  burstTimes.forEach(t => setTimeout(spawnBurst, t));
+
+  function loop(now) {
+    ctx.clearRect(0, 0, 800, 400);
+
+    for (let i = particles.length - 1; i >= 0; i--) {
+      const p = particles[i];
+      p.x += p.vx;
+      p.y += p.vy;
+      p.vy += p.gravity;
+      p.vx *= 0.98;
+      p.alpha -= p.decay;
+      if (p.alpha <= 0) { particles.splice(i, 1); continue; }
+
+      ctx.save();
+      ctx.globalAlpha = p.alpha;
+      ctx.fillStyle = p.color;
+      ctx.shadowColor = p.color;
+      ctx.shadowBlur = 6;
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.restore();
+    }
+
+    fireworksAnimId = requestAnimationFrame(loop);
+  }
+
+  fireworksAnimId = requestAnimationFrame(loop);
+}
+
+function stopFireworks() {
+  if (fireworksAnimId) {
+    cancelAnimationFrame(fireworksAnimId);
+    fireworksAnimId = null;
+  }
+  const canvas = $('fireworks-canvas');
+  canvas.style.display = 'none';
+  const ctx = canvas.getContext('2d');
+  ctx.clearRect(0, 0, 800, 400);
+}
+
 function levelUp() {
   animating = true;
   $('guess-input').disabled = true;
   $('guess-count-display').textContent = '';
+
+  if (exponent === 9) {
+    // Final level beaten — trigger victory
+    animateExponentChange(null, () => {
+      showVictory();
+    });
+    return;
+  }
 
   const nextExp = exponent + 1;
 

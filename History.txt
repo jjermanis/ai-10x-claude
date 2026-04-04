@@ -75,12 +75,21 @@ The initial version was near perfect. Instead of showing, You Win! it went for t
 You Found It! Change that changed. Easy change, for something fairly substantial. The winning
 fireworks that were requested look nice!
 
-Version 00.06 is Release Version 00
+
+Version 00.07	3 minutes dev	0 minute code gen	1 minute test
+
+This is the totally standard steps before release. I added the MIT License to the HTML file. It is
+standard. I also wanted to add an emoji. I wanted to do a 10 - there is no emoji for 10. It 
+suggested that I use SVG to create the image. I did - quick and easy, with minimal changes to tweak.
 
 
 
-TODO Add an emoji for the web page icon. Can the number 10 be done?
+Version 00.07 is Release Version 00
+
+
+
 TODO Create README.md prior to release.
+TODO How about a minor fireworks show at 10^6? And an even larger show at 10^9 than now.
 TODO Minor bug fix. You can type in a massive number. Like over 30 digits, it doesn't
 	stop. It doesn't accept it... but put a limit on what is typed before Enter.
 Note: This game will be able to play up to 15 digits. 
